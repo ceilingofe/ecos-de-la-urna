@@ -76,7 +76,7 @@ body.con-boleta #barra, body.en-intro #barra { opacity: 0; }
 @keyframes rueda { 0%, 100% { transform: translateY(0); opacity: 1; } 60% { transform: translateY(9px); opacity: .2; } }
 @keyframes dedo { 0%, 15% { transform: translateY(10px); opacity: 0; } 30% { opacity: 1; } 75% { transform: translateY(-12px); opacity: 1; } 100% { transform: translateY(-14px); opacity: 0; } }
 .toque { display: none; } .tactil .toque { display: inline; } .tactil .no-toque { display: none; }
-#recordar { left: 50%; bottom: calc(118px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--linea); background: var(--papel); border: 2px solid var(--linea); border-radius: 999px; padding: 6px 14px 6px 10px; box-shadow: 3px 3px 0 var(--linea); white-space: nowrap; }
+#recordar, #freno { left: 50%; bottom: calc(118px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--linea); background: var(--papel); border: 2px solid var(--linea); border-radius: 999px; padding: 6px 14px 6px 10px; box-shadow: 3px 3px 0 var(--linea); white-space: nowrap; }
 #recordar svg { width: 18px; height: 18px; fill: none; stroke: var(--rosa); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; animation: rebote 1.4s ease-in-out infinite; }
 @keyframes rebote { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
 /* ---------- Accesibilidad: salto, versión en texto y movimiento ---------- */
@@ -111,7 +111,7 @@ body.con-texto { overflow: hidden; }
   .largo { display: none; }
   .corto { display: inline !important; }
   #fuente { display: none; }
-  #recordar { bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
+  #recordar, #freno { bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
   .ctl-b { font-size: 13px; padding: 6px 9px; min-height: 38px; }
 }
 @media (prefers-reduced-motion: reduce) { .g-ico .rueda, .g-ico .dedo, #recordar svg, .ft-ir span { animation: none; } }
@@ -426,7 +426,7 @@ body.quieto .ft-ir span { animation: none; }
   #subtitulo { width: calc(100% - 340px); min-width: 300px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); font-size: 15.5px; line-height: 1.45; }
   #nav { bottom: calc(10px + env(safe-area-inset-bottom, 0px)); gap: 4px; } .nav-b { width: 36px; height: 36px; font-size: 19px; } #nav-cuenta { min-width: 44px; font-size: 11px; }
   #fuente { display: none; }
-  #recordar { bottom: calc(66px + env(safe-area-inset-bottom, 0px)); font-size: 12.5px; }
+  #recordar, #freno { bottom: calc(66px + env(safe-area-inset-bottom, 0px)); font-size: 12.5px; }
   #ficha { width: min(290px, 36vw); padding: 6px 12px 10px; top: 55%; }
   .fi-kicker { font-size: 10.5px; margin: 4px 0 2px; } .fi-num { font-size: 30px; } .fi-txt { font-size: 12.5px; line-height: 1.3; margin-top: 4px; }
   .fi-nota { font-size: 17px; margin-top: 3px; } .fi-ley { font-size: 10.5px; margin-top: 3px; } .fi-iconos svg { width: 26px; height: 26px; padding: 4px; } .fi-rejilla { max-height: 100px; }
@@ -649,6 +649,7 @@ body.con-boleta #narrador, body.en-final #narrador, body.con-texto #narrador { o
     <button class="btn claro" type="button" id="gi-no">Seguir en vertical</button>
   </div>
 </div>
+<div class="capa oculto" id="freno" aria-hidden="true"><span>Escucha a Papelito… en un momento sigues</span></div>
 <div class="capa oculto" id="recordar" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 3v13M4.5 10.5 10 16l5.5-5.5"/></svg><span class="no-toque">Sigue bajando para avanzar</span><span class="toque">Desliza hacia arriba para avanzar</span></div>
 <section id="texto-alt" role="dialog" aria-modal="true" aria-labelledby="ta-tit"><div class="ta-hoja"><div class="ta-cab"><div><p class="fi-kicker">Ecos de la urna · versión en texto</p><h2 id="ta-tit">Toda la historia, para leer</h2></div><button type="button" class="btn claro" id="ta-cerrar">Cerrar</button></div><div id="ta-cuerpo"></div><div class="ta-pie"><button type="button" class="btn" id="ta-final">Ir a tu boleta de 2027</button><button type="button" class="btn claro" id="ta-cerrar2">Volver a la historia</button></div></div></section>
 
@@ -1531,6 +1532,33 @@ function main() {
     });
   }
   function semilla(a) { var x = Math.sin(a * 9301 + 49297) * 233280; return x - Math.floor(x); }
+  // Bandera de México con su escudo (sin escudo parecía la de Italia)
+  function texBandera() {
+    return lienzo(350, 200, function (x, w, h) {
+      x.fillStyle = '#006847'; x.fillRect(0, 0, w / 3 + 1, h); x.fillStyle = '#F4F2EC'; x.fillRect(w / 3, 0, w / 3 + 1, h); x.fillStyle = '#CE1126'; x.fillRect(w * 2 / 3, 0, w / 3, h);
+      var cx = w / 2, cy = h / 2 + 6, R = 34;
+      // Corona de encino y laurel con su listón
+      for (var i = 0; i < 10; i++) [-1, 1].forEach(function (sd) {
+        var a = Math.PI / 2 + sd * (0.12 + i * 0.07) * Math.PI;
+        x.fillStyle = i % 2 ? '#4E7F34' : '#2F5A22'; x.beginPath(); x.ellipse(cx + Math.cos(a) * R, cy - 4 + Math.sin(a) * R, 6.5, 3.2, a + Math.PI / 2, 0, Math.PI * 2); x.fill();
+      });
+      ['#006847', '#F4F2EC', '#CE1126'].forEach(function (c, i) { x.fillStyle = c; x.fillRect(cx - 9 + i * 6, cy + 27, 6, 5); });
+      // El lago, la piedra y el nopal
+      x.fillStyle = '#4F87A8'; x.beginPath(); x.ellipse(cx, cy + 20, 15, 4, 0, 0, Math.PI * 2); x.fill();
+      x.fillStyle = '#7A6A55'; x.beginPath(); x.ellipse(cx, cy + 16, 8, 3.5, 0, 0, Math.PI * 2); x.fill();
+      x.fillStyle = '#3F7A2E'; [[0, 9, 5, 8], [-8, 1, 5, 7], [8, 2, 5, 7], [-3, -6, 4.5, 6], [5, -7, 4, 5.5]].forEach(function (n) { x.beginPath(); x.ellipse(cx + n[0], cy + n[1], n[2], n[3], n[0] * 0.05, 0, Math.PI * 2); x.fill(); });
+      x.fillStyle = '#CE1126'; [[-9, -4], [9, -3], [-2, -11]].forEach(function (t) { x.beginPath(); x.arc(cx + t[0], cy + t[1], 1.6, 0, Math.PI * 2); x.fill(); });
+      // El águila de perfil, con las alas arriba, devorando a la serpiente
+      x.fillStyle = '#6B4226';
+      x.beginPath(); x.moveTo(cx - 3, cy - 20); x.lineTo(cx - 24, cy - 46); x.lineTo(cx - 17, cy - 33); x.lineTo(cx - 27, cy - 34); x.lineTo(cx - 6, cy - 14); x.fill();
+      x.beginPath(); x.moveTo(cx + 5, cy - 20); x.lineTo(cx + 26, cy - 48); x.lineTo(cx + 22, cy - 34); x.lineTo(cx + 30, cy - 32); x.lineTo(cx + 9, cy - 12); x.fill();
+      x.fillStyle = '#8B5A2B'; x.beginPath(); x.ellipse(cx + 2, cy - 15, 8, 12, 0.35, 0, Math.PI * 2); x.fill();
+      x.beginPath(); x.moveTo(cx + 6, cy - 5); x.lineTo(cx + 15, cy + 3); x.lineTo(cx + 2, cy - 1); x.fill();
+      x.fillStyle = '#6B4226'; x.beginPath(); x.arc(cx - 6, cy - 28, 5, 0, Math.PI * 2); x.fill();
+      x.fillStyle = '#E3A72F'; x.beginPath(); x.moveTo(cx - 10, cy - 30); x.lineTo(cx - 16, cy - 27); x.lineTo(cx - 10, cy - 26); x.fill();
+      x.strokeStyle = '#5E8C3A'; x.lineWidth = 2.6; x.lineCap = 'round'; x.beginPath(); x.moveTo(cx - 14, cy - 27); x.quadraticCurveTo(cx - 24, cy - 18, cx - 16, cy - 10); x.quadraticCurveTo(cx - 9, cy - 4, cx - 17, cy + 1); x.stroke();
+    });
+  }
 
   // ---------- Suelo, calle, banquetas ----------
   var suelo = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), mat(0xA9A390)); suelo.rotation.x = -Math.PI / 2; suelo.receiveShadow = true; scene.add(suelo);
@@ -1588,11 +1616,50 @@ function main() {
   var blanco = new THREE.MeshStandardMaterial({ map: estuco(0xF2F1EA), roughness: 0.92 });
   caja(20, 6.6, 12, blanco, 0, 3.3, -14.5);
   caja(20.3, 0.3, 12.3, new THREE.MeshStandardMaterial({ map: texAzGris, roughness: 0.95 }), 0, 6.75, -14.5);
-  caja(20, 1.1, 0.12, mat(0x2F6B4F), 0, 0.55, -8.42, false);
-  for (var w = -3; w <= 3; w++) if (w !== 0) { caja(1.8, 1.2, 0.1, ventanaMat, w * 2.6, 4.6, -8.43, false); caja(1.8, 1.2, 0.1, ventanaMat, w * 2.6, 2.0, -8.43, false); }
-  [-1, 1].forEach(function (s) { caja(8, 2.2, 0.35, blanco, s * 6, 1.1, -6.6); caja(8, 0.6, 0.37, mat(0x2F6B4F), s * 6, 0.3, -6.6, false); });
-  var texEsc = rotulo([{ t: 'Escuela Primaria', y: 52, f: '40px "Atkinson Hyperlegible", sans-serif' }, { t: 'Leona Vicario', y: 112 }], 1024, 160, '#F2F1EA', '#2F6B4F', '64px Bungee, sans-serif');
-  var rotEsc = new THREE.Mesh(new THREE.PlaneGeometry(13, 2.03), new THREE.MeshStandardMaterial({ map: texEsc, roughness: 0.95 })); rotEsc.position.set(0, 5.6, -8.4); scene.add(rotEsc);
+  // Escuela pública tradicional: guardapolvo verde, volado sobre la entrada, ventanales con herrería, barda pintada con reja y asta bandera
+  var verdeEsc = mat(0x2F6B4F), cremaEsc = mat(0xE9E2CF, 0.9);
+  caja(20, 1.2, 0.12, verdeEsc, 0, 0.6, -8.42, false);
+  caja(20.6, 0.26, 1.3, cremaEsc, 0, 3.32, -7.95); caja(20.6, 0.34, 0.06, verdeEsc, 0, 3.32, -7.29, false);
+  caja(20, 0.3, 0.12, verdeEsc, 0, 3.6, -8.42, false);
+  caja(20.4, 0.85, 0.22, cremaEsc, 0, 7.02, -8.45); caja(20.4, 0.14, 0.24, verdeEsc, 0, 7.5, -8.45, false);
+  for (var w = -3; w <= 3; w++) if (w !== 0) [4.75, 1.95].forEach(function (vy) {
+    caja(2.0, 1.45, 0.08, mat(0x5E6E64, 0.6), w * 2.6, vy, -8.44, false);
+    caja(1.8, 1.25, 0.1, ventanaMat, w * 2.6, vy, -8.43, false);
+    caja(2.1, 0.1, 0.22, cremaEsc, w * 2.6, vy - 0.78, -8.4, false);
+    if (!bajo) for (var r = -3; r <= 3; r++) caja(0.04, 1.3, 0.05, verdeEsc, w * 2.6 + r * 0.27, vy, -8.36, false);
+  });
+  // Barda pintada a mano, con pilares y reja
+  var texBarda = lienzo(512, 140, function (x, w, h) {
+    x.fillStyle = '#ECE5D2'; x.fillRect(0, 0, w, h); grano(x, w, h, 1500, 0.06);
+    x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#7A1F2B'; x.font = '30px Bungee, sans-serif';
+    x.fillText('ESC. PRIM. LEONA VICARIO', w / 2, 46); x.fillStyle = '#2F6B4F'; x.font = 'bold 24px "Atkinson Hyperlegible", sans-serif'; x.fillText('¡La educación es de todas y todos!', w / 2, 90);
+  });
+  var texReja = lienzo(256, 64, function (x, w, h) { x.clearRect(0, 0, w, h); x.fillStyle = '#2F6B4F'; x.fillRect(0, 8, w, 5); x.fillRect(0, h - 8, w, 5); for (var b = 4; b < w; b += 16) { x.fillRect(b, 4, 5, h - 4); x.beginPath(); x.moveTo(b - 3, 6); x.lineTo(b + 2.5, 0); x.lineTo(b + 8, 6); x.fill(); } });
+  texReja.repeat.set(3, 1);
+  [-1, 1].forEach(function (s) {
+    caja(8, 2.2, 0.35, blanco, s * 6, 1.1, -6.6); caja(8, 0.6, 0.37, verdeEsc, s * 6, 0.3, -6.6, false);
+    [-4, 0, 4].forEach(function (dx) { caja(0.42, 3.4, 0.45, cremaEsc, s * 6 + dx, 1.7, -6.6); caja(0.5, 0.12, 0.52, verdeEsc, s * 6 + dx, 3.44, -6.6, false); });
+    var pinta = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 0.93), new THREE.MeshStandardMaterial({ map: texBarda, roughness: 0.95 })); pinta.position.set(s * 4, 1.45, -6.41); scene.add(pinta);
+    var reja = new THREE.Mesh(new THREE.PlaneGeometry(8, 1.1), new THREE.MeshStandardMaterial({ map: texReja, transparent: true, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.6 })); reja.position.set(s * 6, 2.75, -6.6); scene.add(reja);
+  });
+  // El nombre, rotulado a mano en un frontón al centro
+  caja(9.6, 1.9, 0.26, cremaEsc, 0, 7.6, -8.47); caja(9.8, 0.16, 0.3, verdeEsc, 0, 8.6, -8.47, false);
+  var texEsc = lienzo(1024, 200, function (x, w, h) {
+    x.fillStyle = '#ECE5D2'; x.fillRect(0, 0, w, h); grano(x, w, h, 2500, 0.06);
+    x.strokeStyle = '#2F6B4F'; x.lineWidth = 8; x.strokeRect(14, 14, w - 28, h - 28);
+    x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#2F6B4F';
+    x.font = 'bold 34px "Atkinson Hyperlegible", sans-serif'; x.fillText('ESCUELA PRIMARIA', w / 2, 52);
+    x.font = '70px Bungee, sans-serif'; x.fillStyle = '#7A1F2B'; x.fillText('“LEONA VICARIO”', w / 2, 114);
+    x.font = 'bold 24px "Atkinson Hyperlegible", sans-serif'; x.fillStyle = '#2F6B4F'; x.fillText('TURNO MATUTINO', w / 2, 168);
+  });
+  var rotEsc = new THREE.Mesh(new THREE.PlaneGeometry(9.2, 1.8), new THREE.MeshStandardMaterial({ map: texEsc, roughness: 0.95 })); rotEsc.position.set(0, 7.6, -8.33); scene.add(rotEsc);
+  // Asta bandera en el patio de enfrente
+  var astaB = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.1, 9, 10), mat(0xC9CCD0, 0.35, { metalness: 0.6 })); astaB.position.set(-9.2, 4.5, -7.5); astaB.castShadow = true; scene.add(astaB);
+  caja(0.9, 0.3, 0.9, cremaEsc, -9.2, 0.15, -7.5);
+  var gBandera = new THREE.PlaneGeometry(2.45, 1.4, 12, 1); gBandera.translate(1.24, 0, 0);
+  var banderaEsc = new THREE.Mesh(gBandera, new THREE.MeshStandardMaterial({ map: texBandera(), roughness: 0.9, side: THREE.DoubleSide })); banderaEsc.position.set(-9.13, 8.2, -7.5); banderaEsc.castShadow = true; scene.add(banderaEsc);
+  var ondaB = gBandera.attributes.position, ondaX = []; for (var ob = 0; ob < ondaB.count; ob++) ondaX.push(ondaB.getX(ob));
+  function ondearBandera(T) { for (var k = 0; k < ondaB.count; k++) ondaB.setZ(k, Math.sin(ondaX[k] * 2.2 - T * 3) * 0.16 * ondaX[k] / 2.45); ondaB.needsUpdate = true; }
   var texLona = rotulo([{ t: 'Aquí se vota', y: 70 }, { t: 'Casilla básica, sección 0427', y: 150, f: '36px "Atkinson Hyperlegible", sans-serif' }], 768, 200, '#D1196E', '#FFFFFF', '68px Bungee, sans-serif');
   var lona = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 1.35), new THREE.MeshStandardMaterial({ map: texLona, roughness: 0.9, side: THREE.DoubleSide })); lona.position.set(0, 3.2, -6.35); scene.add(lona);
   [-2.7, 2.7].forEach(function (x) { caja(0.18, 3.9, 0.18, mat(0x8A8A8A, 0.5), x, 1.95, -6.4); });
@@ -1712,7 +1779,7 @@ function main() {
     brazo: new THREE.CylinderGeometry(0.052, 0.045, 0.3, 7), antebrazo: new THREE.CylinderGeometry(0.043, 0.036, 0.27, 7), mano: new THREE.SphereGeometry(0.042, 7, 5)
   };
   var TONOS_TU = [0xC69270, 0xB07A52, 0x8D5B3E, 0x6E4630];
-  var PIELES = [0x8D5B3E, 0xB07A52, 0x6E4630, 0xC69270, 0x9C6644, 0xA86F4C], PELOS = [0x1C1410, 0x2B1E16, 0x3A2A1E, 0x8C8C8C, 0xC9C9C9];
+  var PIELES = [0x8D5B3E, 0xC69270, 0x6E4630, 0xB07A52, 0x5A3825, 0xD9AA85, 0x9C6644, 0x7A4A30, 0xA86F4C, 0xE3BC98], PELOS = [0x1C1410, 0x2B1E16, 0x3A2A1E, 0x8C8C8C, 0xC9C9C9];
   // Cada grupo de edad viste su color (tres tonos para que no se vea uniforme)
   var HEX_G = ['#D1196E', '#E39B1B', '#2E8B66', '#3A6BB3'], COL_G = [0xD1196E, 0xE39B1B, 0x2E8B66, 0x3A6BB3];
   var ROPA_GRUPO = [[0xD1196E, 0xB8155F, 0xE0559A], [0xE39B1B, 0xC9850F, 0xEDB24A], [0x2E8B66, 0x22704F, 0x4AA27E], [0x3A6BB3, 0x2D5793, 0x5A86C6]];
@@ -1723,7 +1790,7 @@ function main() {
   function persona(n, arriba, opts) {
     opts = opts || {};
     var g = new THREE.Group();
-    var piel = lineal(opts.piel != null ? opts.piel : PIELES[n % PIELES.length], opts.piel != null ? 0.9 : 0.75), abajo = opts.abajo || ROPA_ABAJO[n % ROPA_ABAJO.length];
+    var piel = lineal(opts.piel != null ? opts.piel : PIELES[n % PIELES.length], 0.9), abajo = opts.abajo || ROPA_ABAJO[n % ROPA_ABAJO.length];
     var mujer = !!opts.mujer, falda = mujer && !opts.abajo && semilla(n + 31) < 0.35, corta = !opts.canas && semilla(n + 37) < 0.45;
     var estilo = opts.estilo != null ? opts.estilo : opts.canas ? (mujer ? 2 : 0) : mujer ? (semilla(n + 41) < 0.5 ? 1 : 2) : (semilla(n + 43) < 0.3 ? 3 : 0);
     var pelo = opts.canas ? PELOS[3 + n % 2] : PELOS[n % 3];
@@ -2006,12 +2073,12 @@ function main() {
     { g: pataMesa, c: 0x55595E, x: -0.27, y: 0.37, z: -0.45 }, { g: pataMesa, c: 0x55595E, x: 0.27, y: 0.37, z: -0.45 }
   ]);
   var gRopa = fusionar([{ g: GP.torso, c: 0xFFFFFF, y: 0.48, z: 0.12, sz: 0.68 }, { g: GP.hombro, c: 0xFFFFFF, x: -0.2, y: 1.03, z: 0.12 }, { g: GP.hombro, c: 0xFFFFFF, x: 0.2, y: 1.03, z: 0.12 }, { g: new THREE.BoxGeometry(0.09, 0.09, 0.42), c: 0xFFFFFF, x: -0.22, y: 0.84, z: -0.1 }, { g: new THREE.BoxGeometry(0.09, 0.09, 0.42), c: 0xFFFFFF, x: 0.22, y: 0.84, z: -0.1 }]);
-  var gFijo = fusionar([{ g: GP.cuello, c: 0xA86F4C, y: 1.15, z: 0.12 }, { g: GP.cabeza, c: 0xA86F4C, y: 1.32, z: 0.1, sx: 0.9, sy: 1.08 }, { g: GP.peloCorto, c: 0x2B1E16, y: 1.33, z: 0.094, sx: 0.93, sy: 1.04 }, { g: new THREE.BoxGeometry(0.34, 0.14, 0.44), c: 0x2F3A4A, y: 0.53, z: -0.06 }, { g: new THREE.BoxGeometry(0.3, 0.44, 0.12), c: 0x2F3A4A, y: 0.25, z: -0.26 }]);
+  var gFijo = fusionar([{ g: GP.cuello, c: 0xFFFFFF, y: 1.15, z: 0.12 }, { g: GP.cabeza, c: 0xFFFFFF, y: 1.32, z: 0.1, sx: 0.9, sy: 1.08 }, { g: GP.peloCorto, c: 0x2B1E16, y: 1.33, z: 0.094, sx: 0.93, sy: 1.04 }, { g: new THREE.BoxGeometry(0.34, 0.14, 0.44), c: 0x2F3A4A, y: 0.53, z: -0.06 }, { g: new THREE.BoxGeometry(0.3, 0.44, 0.12), c: 0x2F3A4A, y: 0.25, z: -0.26 }]);
   var pupitres = new THREE.InstancedMesh(gPupitre, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.8 }), N_AS), sentados = new THREE.InstancedMesh(gRopa, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85 }), N_AS), cabezas = new THREE.InstancedMesh(gFijo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.8 }), N_AS);
   [pupitres, sentados, cabezas].forEach(function (m) { m.castShadow = true; m.receiveShadow = true; pupitresG.add(m); });
   // ¿Quién votó? Quien votó levanta la mano con el pulgar entintado; quien no, se queda viendo su celular
   var gBrazoArriba = new THREE.CylinderGeometry(0.048, 0.042, 0.56, 7); gBrazoArriba.translate(0, 0.28, 0);
-  var gManoArriba = fusionar([{ g: GP.mano, c: 0xA86F4C, y: 0.6, sx: 1.1, sy: 1.2 }, { g: new THREE.BoxGeometry(0.035, 0.09, 0.035), c: 0xA86F4C, x: -0.035, y: 0.68 }, { g: new THREE.BoxGeometry(0.042, 0.04, 0.042), c: 0x3B1E7A, x: -0.035, y: 0.735 }]);
+  var gManoArriba = fusionar([{ g: GP.mano, c: 0xFFFFFF, y: 0.6, sx: 1.1, sy: 1.2 }, { g: new THREE.BoxGeometry(0.035, 0.09, 0.035), c: 0xFFFFFF, x: -0.035, y: 0.68 }, { g: new THREE.BoxGeometry(0.042, 0.04, 0.042), c: 0x3B1E7A, x: -0.035, y: 0.735 }]);
   var brazosA = new THREE.InstancedMesh(gBrazoArriba, new THREE.MeshStandardMaterial({ roughness: 0.85 }), N_AS), manosA = new THREE.InstancedMesh(gManoArriba, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.8 }), N_AS);
   var gCel = new THREE.BoxGeometry(0.08, 0.012, 0.14); gCel.translate(0, 0.765, -0.16);
   var celulares = new THREE.InstancedMesh(gCel, new THREE.MeshBasicMaterial({ color: 0x9FD8FF }), N_AS);
@@ -2039,7 +2106,8 @@ function main() {
     var fi = Math.floor((i % 100) / 10), co = i % 10;
     asientos.push({ gx: -4.95 + co * 1.1, gz: -4.3 + fi * 1.0, s: 0, b: 0.85, luz: 0, mesa: i < 100 ? 1 : 0, mano: 0, cel: 0, gris: 0 });
     brazosA.setColorAt(i, BLANCO);
-    PIEL_S.push(new THREE.Color(0xFFFFFF).lerp(new THREE.Color(0x9A8478), semilla(i + 900) * 0.55));
+    // Cada lugar con su tono de piel: del moreno oscuro al claro, como en cualquier salón de México
+    PIEL_S.push(new THREE.Color(lineal(PIELES[Math.floor(semilla(i + 900) * PIELES.length)], 0.9))); manosA.setColorAt(i, PIEL_S[i]);
     pupitres.setColorAt(i, BLANCO); sentados.setColorAt(i, BLANCO); cabezas.setColorAt(i, PIEL_S[i]); haces.setColorAt(i, new THREE.Color(0)); charcos.setColorAt(i, new THREE.Color(0));
   }
   var layoutLista = [], votoAsiento = [], circ = null, ultimoFoco = -1, puertaSono = false;
@@ -2977,9 +3045,13 @@ function main() {
     var radios = [], suma = 0, asign = 0, f, mejor = 99;
     for (f = 0; f < FILAS_C; f++) { radios.push(R_C + f * DR_C); suma += R_C + f * DR_C; }
     var gradas = [new THREE.MeshLambertMaterial({ color: 0x2B2244 }), new THREE.MeshLambertMaterial({ color: 0x342A55 })];
-    for (f = FILAS_C - 1; f >= 0; f--) {
-      var gr = new THREE.Mesh(new THREE.CylinderGeometry(radios[f] + DR_C / 2, radios[f] + DR_C / 2, (f + 1) * ALTO_C, 72, 1, false, Math.PI * 0.53, Math.PI * 0.94), gradas[f % 2]);
-      gr.position.y = (f + 1) * ALTO_C / 2; hemiciclo.add(gr);
+    // Cada grada es un escalón (huella y peralte), no un cilindro macizo: antes las de atrás tapaban las de adelante y tu curul quedaba enterrada
+    gradas.forEach(function (g) { g.side = THREE.DoubleSide; });
+    for (f = 0; f < FILAS_C; f++) {
+      var rIn = radios[f] - DR_C / 2, rOut = radios[f] + DR_C / 2, hF = (f + 1) * ALTO_C;
+      var huella = new THREE.Mesh(new THREE.RingGeometry(rIn, rOut, 72, 1, Math.PI * 0.03, Math.PI * 0.94), gradas[f % 2]); huella.rotation.x = -Math.PI / 2; huella.position.y = hF; hemiciclo.add(huella);
+      var peralte = new THREE.Mesh(new THREE.CylinderGeometry(rIn, rIn, ALTO_C, 72, 1, true, Math.PI * 0.53, Math.PI * 0.94), gradas[(f + 1) % 2]); peralte.position.y = hF - ALTO_C / 2; hemiciclo.add(peralte);
+      if (f === FILAS_C - 1) { var fondo = new THREE.Mesh(new THREE.CylinderGeometry(rOut, rOut, hF, 72, 1, true, Math.PI * 0.53, Math.PI * 0.94), gradas[0]); fondo.position.y = hF / 2; hemiciclo.add(fondo); }
     }
     for (f = 0; f < FILAS_C; f++) {
       var n = f === FILAS_C - 1 ? 500 - asign : Math.round(500 * radios[f] / suma); asign += n;
@@ -3053,7 +3125,8 @@ function main() {
     }
     if (!pinC) { pinC = new THREE.Sprite(yo.pin.material); camara3.add(pinC); }
     pinC.material = yo.pin.material; var ct = CURULES[curulTu];
-    pinC.position.set(ct.x, ct.y + 1.15 + hemiciclo.position.y, ct.z); pinC.visible = CURULES[curulTu].l > 0.5 && hunde < 0.3;
+    pinC.position.set(ct.x * 0.86, ct.y + 1.25 + hemiciclo.position.y, ct.z * 0.86); pinC.visible = CURULES[curulTu].l > 0.5 && hunde < 0.3;
+    if (tuC) tuC.g.visible = pinC.visible;
     var tan = Math.tan(camera.fov * Math.PI / 360), alto = (movil ? 40 : 46) / (window.innerHeight / 2) * tan;
     pinC.scale.set(alto * 256 / 176, alto, 1);
 
@@ -3120,7 +3193,7 @@ function main() {
     m.position.set(x, y, z); m.rotation.y = ry || 0; d.add(m); return m;
   }
   // Tú, en medio de las cuatro maquetas: se apagan las luces y un foco te encuentra
-  var FONDO_M = new THREE.Color(0xDCD3BF), FONDO_TU = new THREE.Color(0x15121F), tuM = null, pinM = null;
+  var FONDO_M = new THREE.Color(0xDCD3BF), FONDO_TU = new THREE.Color(0x15121F), tuM = null, pinM = null, tuC = null;
   var pedestal = new THREE.Group(); maqueta.add(pedestal);
   var pedBase = new THREE.Mesh(new THREE.CylinderGeometry(1.15, 1.2, 0.3, 40), mat(0xEEF0E6)); pedBase.position.y = 0.15; pedBase.receiveShadow = true; pedestal.add(pedBase);
   var pedCanto = new THREE.Mesh(new THREE.CylinderGeometry(1.22, 1.22, 0.08, 40, 1, true), mat(0x4B2C82)); pedCanto.position.y = 0.04; pedestal.add(pedCanto);
@@ -3131,6 +3204,10 @@ function main() {
   function tuEnMaqueta(opts) {
     if (tuM) pedestal.remove(tuM.g);
     tuM = persona(999, 0x4B2C82, opts); tuM.g.position.set(0, 0.3, 0); pedestal.add(tuM.g);
+    // También en la Cámara: te pones de pie junto a tu curul, en lugar de quedar escondido entre las gradas
+    if (tuC) hemiciclo.remove(tuC.g);
+    tuC = persona(999, 0x4B2C82, Object.assign({}, opts, { escala: 0.42 })); var ct = CURULES[curulTu];
+    tuC.g.position.set(ct.x * 0.86, ct.y - ALTO_C, ct.z * 0.86); tuC.g.rotation.y = ct.ry; tuC.g.visible = false; hemiciclo.add(tuC.g);
     if (!pinM) { pinM = new THREE.Sprite(); pinM.center.set(0.5, 0); pinM.renderOrder = 10; maqueta.add(pinM); }
   }
   function arbolM(d, x, z, s) { cajaEn(d, 0.14 * s, 1.1 * s, 0.14 * s, mat(0x5A4030), x, 0.55 * s, z); var c = new THREE.Mesh(new THREE.IcosahedronGeometry(0.75 * s, 1), mat(0x4F7F3F)); c.position.set(x, 1.45 * s, z); c.castShadow = true; d.add(c); }
@@ -3142,7 +3219,7 @@ function main() {
     cajaEn(d, 3.8, 1.75, 0.14, crema, -0.4, 0.875, -1.65); cajaEn(d, 3.8, 0.55, 0.03, verde, -0.4, 0.3, -1.57);
     cajaEn(d, 0.14, 1.75, 2.9, crema, -2.3, 0.875, -0.2); cajaEn(d, 0.03, 0.55, 2.9, verde, -2.22, 0.3, -0.2);
     [-0.9, 0.6].forEach(function (z) { cajaEn(d, 0.03, 0.6, 0.9, mat(0x9FC3D6, 0.2), -2.2, 1.15, z); });
-    letreroM(d, [{ t: 'Lunes 9 de marzo de 2026', y: 50 }, { t: '½ + ¼ = ¾', y: 130 }, { t: 'Mi escuela, mi país', y: 205 }], 1.9, 0.9, -0.2, 1.12, -1.57, 0, '#2F4F3A', '#F0EEE4', '600 40px Caveat');
+    letreroM(d, [{ t: '14 de marzo de 2026', y: 50 }, { t: '½ + ¼ = ¾', y: 130 }, { t: 'Mi escuela, mi país', y: 205 }], 1.9, 0.9, -0.2, 1.12, -1.57, 0, '#2F4F3A', '#F0EEE4', '600 40px Caveat');
     cajaEn(d, 2.1, 0.06, 0.08, madera, -0.2, 0.64, -1.55);
     cajaEn(d, 0.9, 0.42, 0.5, madera, 0.95, 0.21, -1.05);
     var maestra = gente2(d, 5301, 0x7A4E8C, { mujer: true, abajo: 0x2F3A4A }, -1.45, -1.05, 0.5); maestra.bD.rotation.z = 1.25; if (maestra.eD) maestra.eD.rotation.x = -0.2;
@@ -3158,7 +3235,7 @@ function main() {
       });
     });
     cajaEn(d, 0.05, 2.6, 0.05, mat(0xC8C8C8, 0.4), 1.7, 1.3, 1.9);
-    [0x1E6B47, 0xF4F1E8, 0xB8323A].forEach(function (c, i) { cajaEn(d, 0.24, 0.42, 0.02, mat(c), 1.84 + i * 0.24, 2.36, 1.9); });
+    cajaEn(d, 0.74, 0.42, 0.02, new THREE.MeshStandardMaterial({ map: texBandera(), roughness: 0.9 }), 2.09, 2.36, 1.9);
   })();
 
   // 2. El hospital: clínica con ambulancia en la entrada
@@ -3185,9 +3262,9 @@ function main() {
   // 3. La pensión: módulo bajo una carpa y la fila de personas adultas mayores
   (function () {
     var d = dio(2, 0xD3C7AD), tubo = mat(0xC8C8C8, 0.4);
-    [[-1.5, -1.5], [0.9, -1.5], [-1.5, -0.1], [0.9, -0.1]].forEach(function (p) { cajaEn(d, 0.05, 1.6, 0.05, tubo, p[0], 0.8, p[1]); });
-    for (var i = 0; i < 6; i++) cajaEn(d, 0.4, 0.06, 1.5, mat(i % 2 ? 0xF4F1E8 : 0x4B2C82), -1.3 + i * 0.4, 1.63, -0.8);
-    letreroM(d, [{ t: 'PENSIÓN · ADULTOS MAYORES', y: 34 }], 2.4, 0.24, -0.3, 1.45, -0.05, 0, '#F4F1E8', '#4B2C82', '30px Bungee');
+    [[-1.5, -1.5], [0.9, -1.5], [-1.5, -0.1], [0.9, -0.1]].forEach(function (p) { cajaEn(d, 0.05, 2.3, 0.05, tubo, p[0], 1.15, p[1]); });
+    for (var i = 0; i < 6; i++) cajaEn(d, 0.4, 0.06, 1.5, mat(i % 2 ? 0xF4F1E8 : 0x4B2C82), -1.3 + i * 0.4, 2.33, -0.8);
+    letreroM(d, [{ t: 'PENSIÓN · ADULTOS MAYORES', y: 34 }], 2.4, 0.24, -0.3, 2.15, -0.05, 0, '#F4F1E8', '#4B2C82', '30px Bungee');
     cajaEn(d, 1.8, 0.05, 0.6, mat(0xF5F5F5), -0.3, 0.52, -0.95); cajaEn(d, 1.8, 0.45, 0.03, mat(0xE9E4D6), -0.3, 0.27, -0.66);
     cajaEn(d, 0.36, 0.02, 0.26, mat(0x2B2B30), -0.6, 0.56, -1.0); cajaEn(d, 0.36, 0.24, 0.02, mat(0x2B2B30), -0.6, 0.67, -1.12);
     gente2(d, 8011, 0x3A6BB3, { mujer: true, abajo: 0x2F3A4A }, -0.6, -1.5, 0);
@@ -3335,16 +3412,22 @@ function main() {
   }
 
   // ---------- Bucle ----------
-  var objetivo = 0, progreso = 0, objQ = 0, trasPista = 0, Q = 0, relatoActual = -1, activo = false, faseVista = '', ultimoArrastre = 0, intro = -1, introFin = 4.9, tuBoleta = false;
+  var objetivo = 0, progreso = 0, objQ = 0, trasPista = 0, Q = 0, relatoActual = -1, activo = false, faseVista = '', ultimoArrastre = 0, intro = -1, introFin = 4.9, introEspera = 0, tuBoleta = false;
   var horaEl = document.getElementById('hora'), fechaEl = document.getElementById('fecha'), fundido = document.getElementById('fundido');
   var pistaEl = document.getElementById('pista'), finalEl = document.getElementById('final'), finalAbierto = false;
   var capaMarca = document.getElementById('marca'), capaReloj = document.getElementById('reloj'), capaFuente = document.getElementById('fuente'), capaCtl = document.getElementById('controles'), anioGrande = document.getElementById('anio-grande'), agNum = document.getElementById('ag-num'), agTipo = document.getElementById('ag-tipo'), agLinea = document.getElementById('ag-linea');
   var etqA = document.getElementById('etq-a'), etqB = document.getElementById('etq-b');
   ANIOS.forEach(function (y) { var li = document.createElement('li'); li.textContent = y; agLinea.appendChild(li); });
   var dentroPrevio = {};
+  function vozOcupada() { var v = window.__vozPapelito; return !!(v && v.ocupada && v.ocupada()); }
   function leerScroll() {
     var maxP = pistaEl.offsetHeight - window.innerHeight, y = window.scrollY;
     objetivo = maxP > 0 ? Math.min(1, Math.max(0, y / maxP)) : 0; trasPista = y - maxP;
+    // Freno: el scroll no deja pasar un diálogo que todavía no termina
+    if (activo && !finalAbierto && !saltando && maxP > 0) {
+      var lim = limiteFreno(Date.now() < navLibreHasta);
+      if (objetivo > lim) { objetivo = lim; trasPista = Math.min(trasPista, 0); var yy = Math.floor(lim * maxP); if (y - yy > 2) window.scrollTo({ top: yy, behavior: 'auto' }); avisarFreno(); }
+    }
   }
   window.addEventListener('scroll', leerScroll, { passive: true });
   var camB = V(12, 3.3, 5.8), mirB = V(-0.5, 1.7, -7), fovBase = 28;
@@ -3363,17 +3446,58 @@ function main() {
   function cerrarGuia() { if (guiaVista === 1) { guiaEl.classList.add('oculto'); guiaVista = 2; } }
   // Cada diálogo tiene un punto de reposo: donde la escena ya terminó de moverse y muestra lo que dice el texto
   function anclaDe(i) { var r = RELATO[i], sig = i + 1 < RELATO.length ? RELATO[i + 1][0] : 1; return Math.min(1, r[0] + (sig - r[0]) * (r[2] != null ? r[2] : 0.55)); }
+  // ---------- Freno: cada diálogo se escucha completo antes de seguir ----------
+  // Con la voz encendida, el scroll no pasa al siguiente diálogo hasta que Papelito termina; sin voz, espera lo que tarda leerlo.
+  // Las boletas de razones son freno duro: ni las flechas las saltan, y suenan una por una.
+  var VEL_MAX = 0.0085, navLibreHasta = 0, frenoAvisoHasta = 0, frenoEl = document.getElementById('freno');
+  var freno = { rel: null, pts: [], h: -1, desde: 0, oidos: [] };
+  function puntosFreno() {
+    if (freno.rel === RELATO) return freno.pts;
+    var pts = RELATO.map(function (r) { return { p: r[0], t: r[1], duro: faseDe(r[0] + 1e-6)[0] === 'razones' }; });
+    [0, 1, 2].forEach(function (j) { pts.push({ p: en('razones', 0.08 + j * 0.26), t: '', duro: true, carta: true }); });
+    pts.sort(function (a, b) { return a.p - b.p; });
+    freno.rel = RELATO; freno.pts = pts; freno.h = -1; freno.oidos = pts.map(function () { return false; });
+    return pts;
+  }
+  function puntoDe(pts, P) { var h = -1; for (var i = 0; i < pts.length; i++) if (P >= pts[i].p - 0.0005) h = i; return h; }
+  function frenoCuadro(P, T) {
+    if (!activo || !RELATO.length) return;
+    var pts = puntosFreno(), h = puntoDe(pts, P);
+    if (h !== freno.h) { freno.h = h; freno.desde = T; }
+    if (h >= 0 && !freno.oidos[h]) {
+      var pt = pts[h], dur = T - freno.desde, voz = window.__vozPapelito, conVoz = !!(voz && voz.activa && voz.activa());
+      var lectura = pt.carta ? 4 : Math.min(6, Math.max(2.2, pt.t.replace(/\*/g, '').split(/\s+/).length * 0.26));
+      if (dur > 18 || dur > (conVoz ? 1.2 : lectura) && !vozOcupada()) freno.oidos[h] = true;
+    }
+    if (frenoEl) frenoEl.classList.toggle('oculto', Date.now() > frenoAvisoHasta);
+  }
+  // Hasta dónde puede llegar el avance: al primer punto sin escuchar se puede entrar, pero no pasar de él
+  function limiteFreno(soloDuros) {
+    var pts = puntosFreno(), n = pts.length; if (!n) return 1;
+    var k = Math.max(0, puntoDe(pts, progreso));
+    function libre(i) { return freno.oidos[i] || soloDuros && !pts[i].duro; }
+    if (libre(k)) { k++; while (k < n && libre(k)) k++; }
+    if (k + 1 >= n) return 1;
+    return pts[k + 1].p - Math.min(0.0012, (pts[k + 1].p - pts[k].p) * 0.03);
+  }
+  function avisarFreno() { frenoAvisoHasta = Date.now() + 1800; }
+  window.__freno = function () { return { h: freno.h, oidos: freno.oidos.filter(Boolean).length, lim: limiteFreno(false) }; };
   window.__anclas = function () { return RELATO.map(function (r, i) { return [anclaDe(i), r[1]]; }); };
+  // Para pruebas y grabación: fija el avance sin pasar por el scroll
+  window.__ecosP = function (v) { if (v != null) { objetivo = progreso = v; } return progreso; };
   function irA(dir) {
     if (!activo || finalAbierto) return;
     var b = beatDe(objetivo), i = b + dir;
     // Si estás antes del reposo del diálogo actual, "siguiente" primero te lleva a ese reposo
     if (dir > 0 && objetivo < anclaDe(b) - 0.002) i = b;
     var dest = i < 0 ? 0 : i >= RELATO.length ? 1 : anclaDe(i);
+    // Las flechas pueden saltarse un diálogo, pero no las boletas de razones
+    var lim = limiteFreno(true); if (dest > lim) { dest = lim; if (dest <= objetivo + 0.0002) avisarFreno(); }
+    navLibreHasta = Date.now() + 1600;
     window.scrollTo({ top: Math.round(dest * maxScroll()), behavior: reduce ? 'auto' : 'smooth' });
     movido(); cerrarGuia();
   }
-  function irDialogo(i) { if (!activo || finalAbierto) return; window.scrollTo({ top: Math.round(anclaDe(Math.max(0, Math.min(RELATO.length - 1, i))) * maxScroll()), behavior: 'auto' }); movido(); cerrarGuia(); }
+  function irDialogo(i) { if (!activo || finalAbierto) return; navLibreHasta = Date.now() + 1600; window.scrollTo({ top: Math.round(Math.min(limiteFreno(true), anclaDe(Math.max(0, Math.min(RELATO.length - 1, i)))) * maxScroll()), behavior: 'auto' }); leerScroll(); progreso = objetivo; movido(); cerrarGuia(); }
   // A11Y: la capa de accesibilidad avanza la historia por aquí (avance automático)
   window.__ecosNav = { siguiente: function () { irA(1); }, puede: function () { return activo && !finalAbierto; }, dialogo: function () { return beatDe(objetivo); }, total: function () { return RELATO.length; } };
   document.getElementById('nav-ant').addEventListener('click', function () { irA(-1); });
@@ -3395,11 +3519,8 @@ function main() {
     else movido();
   });
   // Se llama en cada cuadro: aviso al empezar, recordatorio si te quedas quieto, contador y barra de avance
-  var giroNo = false, girarEl = document.getElementById('girar');
-  document.getElementById('gi-no').addEventListener('click', function () { giroNo = true; girarEl.hidden = true; });
+  // En celular la historia se sigue en vertical: ya no se pide girar la pantalla
   function guiarNavegacion(P, T) {
-    var pideGiro = activo && !giroNo && !finalAbierto && document.body.classList.contains('tactil') && window.innerHeight > window.innerWidth * 1.15 && window.innerWidth < 760;
-    if (pideGiro === girarEl.hidden) { girarEl.hidden = !pideGiro; if (pideGiro) document.getElementById('gi-no').focus({ preventScroll: true }); }
     if (activo && !guiaVista && !finalAbierto) { guiaVista = 1; guiaEl.classList.remove('oculto'); ultimoMov = T; }
     if (guiaVista === 1 && objetivo > 0.004) cerrarGuia();
     var quieto = T - ultimoMov, ver = activo && guiaVista === 2 && !finalAbierto && quieto > 14 && P < 0.97 && !document.body.classList.contains('con-texto');
@@ -3693,7 +3814,7 @@ function main() {
 
   window.entrarAlBarrio = function (p) {
     construirVecinos(p); prepararSalon(p); prepararRelato(p); construirLeyenda(); relatoActual = -1; dentroPrevio = {}; tuBoleta = false;
-    activo = false; intro = 0; progreso = objetivo = 0;
+    activo = false; intro = 0; introEspera = 0; progreso = objetivo = 0;
     if (reduce) { intro = introFin; activo = true; document.body.classList.remove('en-intro'); }
   };
   construirVecinos(null); prepararSalon(null); prepararRelato(null);
@@ -3766,7 +3887,8 @@ function main() {
     var enValle = f === 'valle', va = enValle ? Math.min(tramo(s, 0.15, 0.3), 1 - tramo(s, 0.94, 1)) : 0, fr = enValle ? Math.min(tramo(s, 0.06, 0.2), 1 - tramo(s, 0.95, 1)) : f === 'cierre' ? 1 - tramo(s, 0, 0.25) : 0;
     valleG.visible = va > 0.001; matValle.opacity = va * 0.85; valleG.children.forEach(function (o) { if (o.isSprite) o.material.opacity = Math.min(va, tramo(s, 0.24, 0.32)); });
     filaG.visible = fr > 0.001; filaG.children.forEach(function (o) { if (o.isSprite) o.material.opacity = fr; else o.scale.set(1, 1, Math.max(0.001, fr)); });
-    var hu = enValle ? tramo(s, 0.14, 0.24) * (1 - tramo(s, 0.95, 1)) : 0;
+    // Las siluetas salen justo con su diálogo y terminan de crecer antes de su punto de reposo (antes se quedaban a medias)
+    var hu = enValle ? tramo(s, 0.2, 0.235) * (1 - tramo(s, 0.95, 1)) : 0;
     huecos.visible = hu > 0.001;
     if (huecos.visible) {
       huecosBase.forEach(function (b, k) { var e = Math.max(0.001, Math.min(1, hu * 1.6 - semilla(k + 300) * 0.6)); _o.position.set(b.x, 0.25 + 0.88 * e, b.z); _o.rotation.set(0, 0, 0); _o.scale.set(1, e, 1); _o.updateMatrix(); huecos.setMatrixAt(k, _o.matrix); });
@@ -3825,6 +3947,7 @@ function main() {
     if (leyTot) leyTot.textContent = total + TX(' de 100');
     var llenas = Math.round(total * boletasUrna.length / 100) + (tuBoleta ? 1 : 0); boletasUrna.forEach(function (b, i) { b.visible = i < llenas; });
     urnaG.position.copy(f === 'noche' ? rutaUrna(s) : f === 'razones' ? U3 : URNA0);
+    if (!reduce) ondearBandera(T);
     if (!reduce) { picado.forEach(function (h) { h.g.rotation.z = Math.sin(T * 1.6 + h.fase) * 0.18; }); pesera.position.x += dt * 9; if (pesera.position.x > 90) pesera.position.x = -90; }
   }
 
@@ -3848,7 +3971,7 @@ function main() {
 
     // Luz del salón y reflectores
     luzSala(f === 'historia' || etapa <= 3 ? 1 : etapa === 4 ? 1 - tramo(s, 0.6, 0.64) : 0);
-    lamparas.forEach(function (l) { l.visible = f === 'historia' || etapa === 0; });
+    lamparas.forEach(function (l) { l.visible = f === 'historia' && s < 0.45 || etapa === 0; }); // en la toma alta del mapa tapaban la gráfica
     if (f === 'salon' && etapa !== ultimoFoco) { if (ultimoFoco >= 0 && etapa === 2) Sonido.foco(); ultimoFoco = etapa; }
     if (f !== 'salon') ultimoFoco = -1;
     var k = f === 'salon' ? ease(tramo(s, 0.6, 0.7)) : 0, ctr = centrosCirculo(), cambios = 0;
@@ -4154,8 +4277,13 @@ function main() {
     if (fpsAcum > 2) { var fps = fpsN / fpsAcum; if (fps < 28 && dpr > 1) { dpr = Math.max(1, dpr - 0.5); renderer.setPixelRatio(dpr); tam(); } else if (fps < 22 && dpr <= 1 && renderer.shadowMap.enabled && ++fpsRev > 1) { renderer.shadowMap.type = THREE.BasicShadowMap; } fpsAcum = 0; fpsN = 0; }
 
     var enIntro = intro >= 0 && intro < introFin;
-    if (enIntro) { intro += dt; if (intro >= introFin) { camera.near = 0.5; camera.updateProjectionMatrix(); activo = true; document.body.classList.remove('en-intro'); leerScroll(); progreso = objetivo; } }
-    progreso += (objetivo - progreso) * (reduce ? 1 : 0.07);
+    // El saludo de Papelito termina antes de soltar el scroll y mostrar la guía (espera hasta 11 s más por si el audio se atora)
+    if (enIntro && intro + dt >= introFin && introEspera < 11 && vozOcupada()) introEspera += dt;
+    else if (enIntro) { intro += dt; if (intro >= introFin) { camera.near = 0.5; camera.updateProjectionMatrix(); activo = true; document.body.classList.remove('en-intro'); leerScroll(); progreso = objetivo; } }
+    // Avance suave con tope de velocidad: un scroll brusco no se come las animaciones
+    var dP = (objetivo - progreso) * (reduce ? 1 : Math.min(1, dt * 4)), vMax = VEL_MAX * dt;
+    if (!reduce && !saltando) dP = Math.max(-vMax * 2.5, Math.min(vMax, dP));
+    progreso += dP;
     Q += (objQ - Q) * (reduce ? 1 : 0.08);
     var P = activo ? progreso : 0, fs = faseDe(P), f = fs[0], s = fs[1];
     if (f === 'noche') s *= NOCHE_FIN;
@@ -4172,7 +4300,7 @@ function main() {
     // Al final del recorrido aparece tu boleta de 2027: no se puede seguir sin marcarla
     if (activo && f === 'barrio' && s > 0.72 && !finalAbierto) abrirFinal();
     if (enIntro) animarIntro(intro, T);
-    guiarNavegacion(P, T); describir(enIntro ? 'llegada' : f);
+    guiarNavegacion(P, T); frenoCuadro(P, T); describir(enIntro ? 'llegada' : f);
     if (!interior) { etqA.style.opacity = etqB.style.opacity = 0; anioGrande.classList.add('oculto'); }
 
     // El letrero "Tú" mide lo mismo en pantalla a cualquier distancia
@@ -4407,17 +4535,19 @@ function main() {
   var LLAVES = CLIPS.map(function (c) { return [c[0], norm(c[1])]; }), orden = {};
   CLIPS.forEach(function (c, i) { orden[c[0]] = i; });
   var activa = true; try { activa = localStorage.getItem(CLAVE) !== '0'; } catch (e) {}
-  var cache = {}, actual = null, actualId = '', espera = 0, enCola = null;
+  var cache = {}, actual = null, actualId = '', espera = 0, enCola = null, porEmpezar = false;
   function audio(id) { if (!cache[id]) { var a = new Audio('voz/' + id + '.mp3'); a.preload = 'auto'; a.setAttribute('playsinline', ''); cache[id] = a; } return cache[id]; }
   function sonidoOn() { return !btnS || btnS.getAttribute('aria-pressed') !== 'false'; }
   function lecturaA11y() { var c = document.getElementById('a11y-voz'); return !!(c && c.checked); } // la lectura en voz alta del panel tiene prioridad
   function musica(v) { if (window.Sonido && Sonido.atenuar) Sonido.atenuar(v); }
-  function callar() { clearTimeout(espera); enCola = null; if (actual) { actual.pause(); actual.onended = null; actual = null; musica(1); } }
+  function callar() { clearTimeout(espera); enCola = null; porEmpezar = false; if (actual) { actual.pause(); actual.onended = null; actual = null; musica(1); } }
   function tocar(id, retraso) {
     callar(); if (!activa || !sonidoOn() || lecturaA11y()) return;
     var a = audio(id), i = orden[id];
     if (i != null && CLIPS[i + 1]) audio(CLIPS[i + 1][0]);
+    porEmpezar = true;
     espera = setTimeout(function () {
+      porEmpezar = false;
       try { a.currentTime = 0; } catch (e) {}
       actual = a; actualId = id; musica(0.35);
       a.onended = function () { if (actual !== a) return; actual = null; musica(1); if (enCola) { var s = enCola; enCola = null; tocar(s, 250); } };
@@ -4446,7 +4576,7 @@ function main() {
   if (btnS) btnS.addEventListener('click', function () { if (!sonidoOn()) callar(); });
   var cVoz = document.getElementById('a11y-voz'); if (cVoz) cVoz.addEventListener('change', function () { if (cVoz.checked) callar(); });
   pintar();
-  window.__vozPapelito = { suena: function () { return !!(actual && !actual.paused); }, callar: callar };
+  window.__vozPapelito = { suena: function () { return !!(actual && !actual.paused); }, ocupada: function () { return !!(actual && !actual.paused) || porEmpezar || !!enCola; }, activa: function () { return activa && sonidoOn() && !lecturaA11y(); }, callar: callar };
 })();
 </script>
 </body>
