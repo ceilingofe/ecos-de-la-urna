@@ -76,8 +76,17 @@ body.con-boleta #barra, body.en-intro #barra { opacity: 0; }
 @keyframes rueda { 0%, 100% { transform: translateY(0); opacity: 1; } 60% { transform: translateY(9px); opacity: .2; } }
 @keyframes dedo { 0%, 15% { transform: translateY(10px); opacity: 0; } 30% { opacity: 1; } 75% { transform: translateY(-12px); opacity: 1; } 100% { transform: translateY(-14px); opacity: 0; } }
 .toque { display: none; } .tactil .toque { display: inline; } .tactil .no-toque { display: none; }
-#recordar, #freno { left: 50%; bottom: calc(118px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--linea); background: var(--papel); border: 2px solid var(--linea); border-radius: 999px; padding: 6px 14px 6px 10px; box-shadow: 3px 3px 0 var(--linea); white-space: nowrap; }
-#recordar svg { width: 18px; height: 18px; fill: none; stroke: var(--rosa); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; animation: rebote 1.4s ease-in-out infinite; }
+#recordar, #freno { right: calc(10px + env(safe-area-inset-right, 0px)); top: 50%; transform: translateY(-50%); width: 104px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 13px; font-weight: 700; line-height: 1.25; color: #fff; text-shadow: 0 1px 2px rgba(20,16,32,.9), 0 0 10px rgba(20,16,32,.6); }
+#recordar svg, #freno svg { width: 38px; height: 50px; fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 3px rgba(20,16,32,.7)); }
+#recordar:not(.oculto), #freno:not(.oculto) { animation: tenue 1.8s ease-in-out infinite; }
+@keyframes tenue { 0%, 100% { opacity: .25; } 50% { opacity: .85; } }
+@media (min-width: 700px) { body.con-ficha #recordar, body.con-ficha #freno { top: auto; bottom: calc(120px + env(safe-area-inset-bottom, 0px)); transform: none; } }
+body.en-razones #nav .nav-b { opacity: .35; }
+#legal { position: fixed; inset: 0; z-index: 60; background: rgba(11,10,18,.72); display: none; overflow-y: auto; padding: 24px 16px 60px; }
+body.con-legal #legal { display: block; } body.con-legal { overflow: hidden; }
+#legal .ta-hoja p { font-size: 15.5px; } #legal strong { color: var(--tinta); }
+.ver-legal { background: none; border: 0; padding: 0; font: inherit; color: var(--tinta); text-decoration: underline; cursor: pointer; }
+#b-legal { width: 100%; }
 @keyframes rebote { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
 /* ---------- Accesibilidad: salto, versión en texto y movimiento ---------- */
 .salto { position: fixed; left: 16px; top: -80px; z-index: 30; background: var(--papel); color: var(--linea); font-weight: 700; padding: 10px 14px; border: 2px solid var(--linea); border-radius: 4px; }
@@ -111,10 +120,9 @@ body.con-texto { overflow: hidden; }
   .largo { display: none; }
   .corto { display: inline !important; }
   #fuente { display: none; }
-  #recordar, #freno { bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
   .ctl-b { font-size: 13px; padding: 6px 9px; min-height: 38px; }
 }
-@media (prefers-reduced-motion: reduce) { .g-ico .rueda, .g-ico .dedo, #recordar svg, .ft-ir span { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .g-ico .rueda, .g-ico .dedo, #recordar svg, .ft-ir span, #recordar, #freno { animation: none !important; } }
 body.quieto .g-ico .rueda, body.quieto .g-ico .dedo, body.quieto #recordar svg { animation: none; }
 
 /* ---------- Logo ---------- */
@@ -370,6 +378,7 @@ body.quieto .ft-ir span { animation: none; }
 .cierre-caja h2 { margin: 6px 0 0; font-family: var(--display); font-weight: 400; font-size: clamp(30px, 6vw, 46px); line-height: 1.02; }
 .cierre-caja p { margin: 0; font-size: 17.5px; line-height: 1.45; text-wrap: pretty; }
 .cierre-caja .f-ligas a { color: #FF8FC0; }
+.cierre-caja .c-legal { font-size: 12.5px; opacity: .8; margin: 12px 0 0; } .cierre-caja .ver-legal { color: #FF8FC0; }
 .cierre-caja .liga { color: #fff; }
 
 @media (max-width: 640px) {
@@ -426,7 +435,6 @@ body.quieto .ft-ir span { animation: none; }
   #subtitulo { width: calc(100% - 340px); min-width: 300px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); font-size: 15.5px; line-height: 1.45; }
   #nav { bottom: calc(10px + env(safe-area-inset-bottom, 0px)); gap: 4px; } .nav-b { width: 36px; height: 36px; font-size: 19px; } #nav-cuenta { min-width: 44px; font-size: 11px; }
   #fuente { display: none; }
-  #recordar, #freno { bottom: calc(66px + env(safe-area-inset-bottom, 0px)); font-size: 12.5px; }
   #ficha { width: min(290px, 36vw); padding: 6px 12px 10px; top: 55%; }
   .fi-kicker { font-size: 10.5px; margin: 4px 0 2px; } .fi-num { font-size: 30px; } .fi-txt { font-size: 12.5px; line-height: 1.3; margin-top: 4px; }
   .fi-nota { font-size: 17px; margin-top: 3px; } .fi-ley { font-size: 10.5px; margin-top: 3px; } .fi-iconos svg { width: 26px; height: 26px; padding: 4px; } .fi-rejilla { max-height: 100px; }
@@ -614,6 +622,7 @@ body.con-boleta #narrador, body.en-final #narrador, body.con-texto #narrador { o
   <div id="menu-panel" role="group" aria-label="Opciones" hidden>
   <button id="sonido" class="ctl-b" type="button" aria-pressed="true">Silenciar</button>
   <button id="b-voz" class="ctl-b" type="button" aria-pressed="true">Voz de Papelito: sí</button>
+  <button id="b-legal" class="ctl-b ver-legal-m" type="button">Aviso de privacidad y legal</button>
   <div class="ctl-fila"><button id="b-texto" class="ctl-b" type="button" aria-label="Versión en texto"><span class="largo">Versión en texto</span><span class="corto" aria-hidden="true">Texto</span></button><button id="b-quieto" class="ctl-b" type="button" aria-pressed="false" aria-label="Menos movimiento"><span class="largo">Menos movimiento</span><span class="corto" aria-hidden="true">Menos mov.</span></button><button id="b-cap" class="ctl-b" type="button" aria-haspopup="dialog" aria-controls="capitulos" aria-expanded="false" disabled><span class="largo">Capítulos</span><span class="corto" aria-hidden="true">Índice</span></button><button id="b-a11y" class="ctl-b" type="button" aria-pressed="false" aria-haspopup="dialog" aria-label="Accesibilidad"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="3.6" r="1.8"/><path d="M3.5 7.2c4.3 1.1 8.7 1.1 13 0M10 8.3v4.2M10 12.5l-3 5M10 12.5l3 5"/></svg><span class="largo">Accesibilidad</span></button></div>
   </div>
 </div>
@@ -649,8 +658,27 @@ body.con-boleta #narrador, body.en-final #narrador, body.con-texto #narrador { o
     <button class="btn claro" type="button" id="gi-no">Seguir en vertical</button>
   </div>
 </div>
-<div class="capa oculto" id="freno" aria-hidden="true"><span>Escucha a Papelito… en un momento sigues</span></div>
-<div class="capa oculto" id="recordar" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 3v13M4.5 10.5 10 16l5.5-5.5"/></svg><span class="no-toque">Sigue bajando para avanzar</span><span class="toque">Desliza hacia arriba para avanzar</span></div>
+<div class="capa oculto" id="freno" aria-hidden="true"><svg viewBox="0 0 40 52"><path d="M6 20h7l9-8v28l-9-8H6z" fill="#fff"/><path d="M27 19c3 4 3 10 0 14M31 15c5 6 5 16 0 22"/></svg><span>Escuchando… en un momento sigues</span></div>
+<div class="capa oculto" id="recordar" aria-hidden="true"><svg class="no-toque" viewBox="0 0 40 52"><rect x="9" y="3" width="22" height="34" rx="11"/><path d="M20 10v7"/><path d="M14 43l6 5 6-5"/></svg><svg class="toque" viewBox="0 0 40 52"><rect x="9" y="3" width="22" height="42" rx="4"/><path d="M20 34V15M15 20l5-5 5 5"/></svg><span class="no-toque">Sigue bajando para continuar</span><span class="toque">Sigue deslizando para continuar</span></div>
+<section id="legal" role="dialog" aria-modal="true" aria-labelledby="lg-tit"><div class="ta-hoja"><div class="ta-cab"><div><p class="fi-kicker">Ecos de la urna · documentos legales</p><h2 id="lg-tit">Aviso de privacidad y aviso legal</h2></div><button type="button" class="btn claro" id="lg-cerrar">Cerrar</button></div>
+<h3>Aviso de privacidad simplificado</h3>
+<p><strong>Quién es responsable.</strong> Ecos de la urna es un proyecto del equipo NoPreserveRoot (Sergio Gustavo Acosta Esquivel, Damaris Espericueta Coronado y Citlaly Anayenci Montemayor García), creado para el concurso «Hackea la participación: Datos que construyen democracia» del Instituto Nacional Electoral, Reto 3: Storytelling con datos.</p>
+<p><strong>Qué datos usa la historia y para qué.</strong> Si decides llenar tu boleta, la página usa tu año de nacimiento, tu estado, tu sexo, cómo te ves, tu apodo, tu decisión para 2027 y tu razón para votar. Solo sirven para personalizar la historia, tu tarjeta y tu video. Todo eso se calcula en tu dispositivo: <strong>no se envía a ningún servidor, no se guarda y no se comparte</strong>. Al cerrar o recargar la página, desaparece. También puedes entrar sin dar ningún dato.</p>
+<p><strong>Qué se queda en tu navegador.</strong> Solo tus preferencias de sonido, voz, accesibilidad e idioma, en el almacenamiento local de tu navegador, para no pedírtelas de nuevo. No contienen datos personales y puedes borrarlas desde la configuración de tu navegador.</p>
+<p><strong>Sin cookies, sin analítica, sin publicidad.</strong> No usamos cookies, herramientas de medición ni rastreadores.</p>
+<p><strong>Servicios de terceros.</strong> El sitio se publica en GitHub Pages y carga las tipografías desde Google Fonts y la biblioteca Three.js desde cdnjs (Cloudflare). Como pasa con cualquier sitio web, estos proveedores reciben datos técnicos de la conexión, como la dirección IP y el tipo de navegador, conforme a sus propios avisos de privacidad. Las ligas al INE y a Google Calendar te llevan a sitios que se rigen por sus propios avisos.</p>
+<p><strong>Tu tarjeta y tu video.</strong> Se crean en tu dispositivo. Solo salen de él si tú decides guardarlos o compartirlos.</p>
+<p><strong>Tus derechos.</strong> Como no recabamos ni conservamos datos personales, no tenemos información tuya sobre la cual ejercer los derechos de acceso, rectificación, cancelación u oposición. Este aviso sigue los principios de la Ley Federal de Protección de Datos Personales en Posesión de los Particulares. Si tienes dudas, escríbenos en el repositorio público del proyecto: github.com/ceilingofe/ecos-de-la-urna.</p>
+<h3>Aviso legal</h3>
+<p><strong>No es un sitio oficial.</strong> Ecos de la urna es un proyecto independiente, sin fines de lucro, presentado a una convocatoria del INE. No es un sitio del INE, no habla en su nombre y no expresa posiciones institucionales.</p>
+<p><strong>Sin fines partidistas.</strong> No promueve ningún partido, candidatura ni ideología. Solo invita a participar de forma libre e informada.</p>
+<p><strong>De dónde salen los datos.</strong> Conteos Censales de Participación Ciudadana 2009 a 2024 del INE (datos abiertos y agregados, sin datos personales); Presupuesto de Egresos de la Federación 2026 y notas 123/2025 y 181/2025 del Centro de Estudios de las Finanzas Públicas de la Cámara de Diputados. El equipo procesó y redondeó las cifras, así que pueden diferir ligeramente de las publicaciones originales; para cualquier uso formal consulta siempre las fuentes oficiales.</p>
+<p><strong>Lo que es ilustrativo.</strong> Papelito, las personas del barrio, sus caras, nombres, horas, recorridos y razones para votar son inventados para contar los datos; no son testimonios reales. Las voces se generaron con inteligencia artificial (ElevenLabs). Las boletas son de ejemplo, no tienen validez oficial y no reproducen documentación electoral.</p>
+<p><strong>Símbolos patrios y marcas.</strong> La bandera nacional aparece con fines cívicos y educativos, con respeto a la Ley sobre el Escudo, la Bandera y el Himno Nacionales. Las menciones al INE y a otras instituciones son solo informativas.</p>
+<p><strong>Autoría.</strong> Obra del equipo NoPreserveRoot. Los derechos se rigen por la base décimo primera de la convocatoria: las personas autoras conservan el reconocimiento de su obra y ceden al INE los derechos patrimoniales en los términos ahí establecidos, con fines institucionales y educativos.</p>
+<p class="ta-fuentes">Última actualización: 30 de octubre de 2026.</p>
+<div class="ta-pie"><button type="button" class="btn" id="lg-cerrar2">Volver</button></div></div></section>
+
 <section id="texto-alt" role="dialog" aria-modal="true" aria-labelledby="ta-tit"><div class="ta-hoja"><div class="ta-cab"><div><p class="fi-kicker">Ecos de la urna · versión en texto</p><h2 id="ta-tit">Toda la historia, para leer</h2></div><button type="button" class="btn claro" id="ta-cerrar">Cerrar</button></div><div id="ta-cuerpo"></div><div class="ta-pie"><button type="button" class="btn" id="ta-final">Ir a tu boleta de 2027</button><button type="button" class="btn claro" id="ta-cerrar2">Volver a la historia</button></div></div></section>
 
 <!-- A11Y: panel de accesibilidad -->
@@ -742,7 +770,7 @@ body.con-boleta #narrador, body.en-final #narrador, body.con-texto #narrador { o
         <button class="btn" type="submit" id="depositar">Doblar y depositar</button>
         <button class="liga" type="button" id="sin-datos">Entrar sin mis datos</button>
       </div>
-      <p class="b-leyenda">Boleta de ejemplo, sin validez oficial. Tus datos no se guardan ni se envían: todo se calcula en tu dispositivo.</p>
+      <p class="b-leyenda">Boleta de ejemplo, sin validez oficial. Tus datos no se guardan ni se envían: todo se calcula en tu dispositivo. Proyecto independiente, no es un sitio oficial del INE. <button type="button" class="ver-legal">Aviso de privacidad y aviso legal</button></p>
       <svg class="sello-tinta" aria-hidden="true"><use href="#sello"/></svg>
     </div>
   </form>
@@ -787,7 +815,7 @@ body.con-boleta #narrador, body.en-final #narrador, body.con-texto #narrador { o
         <div class="f-botones"><button class="btn" type="button" id="eco-video">Crear mi video</button><!-- TUECO --><button class="btn" type="button" id="guardar">Guardar tarjeta</button><button class="btn claro" type="button" id="compartir">Compartir</button></div>
       </div>
       <p class="f-ligas"><a href="https://listanominal.ine.mx" target="_blank" rel="noopener">Revisa si tu credencial está vigente</a><a href="https://ubicatucasilla.ine.mx" target="_blank" rel="noopener">Ubica tu casilla</a></p>
-      <p class="b-leyenda">Boleta de ejemplo, sin validez oficial. Tu respuesta y tu razón solo viven en tu tarjeta.</p>
+      <p class="b-leyenda">Boleta de ejemplo, sin validez oficial. Tu respuesta y tu razón solo viven en tu tarjeta. <button type="button" class="ver-legal">Aviso de privacidad y aviso legal</button></p>
     </div>
   </form>
 <div id="cierre" hidden>
@@ -800,6 +828,7 @@ body.con-boleta #narrador, body.en-final #narrador, body.con-texto #narrador { o
     <p class="f-ligas"><a href="https://listanominal.ine.mx" target="_blank" rel="noopener">Revisa tu credencial</a><a href="https://ubicatucasilla.ine.mx" target="_blank" rel="noopener">Ubica tu casilla</a></p>
     <p class="c-tablero"><a class="btn ft-ir" href="datos.html" target="_blank" rel="noopener">Explorar el tablero interactivo <span aria-hidden="true">→</span></a></p>
     <button class="liga" type="button" id="otra-vez">Volver a empezar</button>
+    <p class="c-legal">Proyecto independiente del equipo NoPreserveRoot para «Hackea la participación» del INE. No es un sitio oficial del INE ni tiene fines partidistas. <button type="button" class="ver-legal">Aviso de privacidad y aviso legal</button></p>
   </div>
 </div>
 </section>
@@ -1233,7 +1262,7 @@ var YUA_PAGINA = [
   ['#guia .g-teclas', "Je'el xan u páajtal a meyajtik le botones <b aria-hidden=\"true\">‹ ›</b> ti' ka'abal<span class=\"no-toque\"> wa le flechas <kbd>←</kbd> <kbd>→</kbd></span> tia'al a máan ti' jump'éel t'aan ti' u jeel."],
   ['#g-ok', "Ko'ox"],
   ['#gi-tit', 'Sut a celular'], ['#girar .gi-caja p', "Asab ma'alob u yila'al le tsikbala' wa chilan a celular."], ['#gi-no', "P'áatak wa'atal"],
-  ['#recordar .no-toque', "Péek ka'abal tia'al a bin táanil"], ['#recordar .toque', "Péek ka'anal tia'al a bin táanil"],
+  ['#recordar span.no-toque', "Péek ka'abal tia'al a bin táanil"], ['#recordar span.toque', "Péek ka'anal tia'al a bin táanil"],
   ['#texto-alt .ta-cab .fi-kicker', "Ecos de la urna · ts'íib tia'al xook"], ['#ta-tit', "Tuláakal le tsikbal, tia'al a xokik"],
   ['#ta-cerrar', "K'al"], ['#ta-final', "Xeen ti' a ju'unil yéeyaj 2027"], ['#ta-cerrar2', "Suunen ti' le tsikbalo'"],
   ['#boleta .tijera', "✂ Ch'ak way"],
@@ -3113,7 +3142,7 @@ function main() {
     hemiciclo.position.y = -hunde * 4.6; hemiciclo.visible = hunde < 0.999;
     if (hemiciclo.visible) {
       CURULES.forEach(function (c, i) {
-        var e = reduce ? (forma > 0 ? 1 : 0) : tramo(forma, c.d, c.d + 0.38), ee = ease(e);
+        var e = reduce ? (forma > 0 ? 1 : 0) : tramo(forma, c.d * 0.6, c.d * 0.6 + 0.38), ee = ease(e); // antes las de atrás nunca terminaban de caer
         var dx = c.x + Math.sin(c.ry) * -0.08, dz = c.z + Math.cos(c.ry) * -0.08;
         _oc.position.set(ORIGEN_C.x + (dx - ORIGEN_C.x) * ee, ORIGEN_C.y + (c.y + 0.47 - ORIGEN_C.y) * ee + Math.sin(Math.PI * e) * (1.4 + c.f * 0.14), ORIGEN_C.z + (dz - ORIGEN_C.z) * ee);
         _oc.rotation.set(-0.3 + (1 - ee) * 5.5, c.ry + (1 - ee) * 3, 0); _oc.scale.setScalar(e > 0 ? 1 : 0.001); _oc.updateMatrix(); boletasC.setMatrixAt(i, _oc.matrix);
@@ -3426,7 +3455,8 @@ function main() {
     // Freno: el scroll no deja pasar un diálogo que todavía no termina
     if (activo && !finalAbierto && !saltando && maxP > 0) {
       var lim = limiteFreno(Date.now() < navLibreHasta);
-      if (objetivo > lim) { objetivo = lim; trasPista = Math.min(trasPista, 0); var yy = Math.floor(lim * maxP); if (y - yy > 2) window.scrollTo({ top: yy, behavior: 'auto' }); avisarFreno(); }
+      if (bloqueoRazones() && Date.now() >= navLibreHasta && Math.abs(objetivo - progreso) > 0.002) { var yb = Math.round(progreso * maxP); objetivo = progreso; if (Math.abs(y - yb) > 2) window.scrollTo({ top: yb, behavior: 'auto' }); avisarFreno(); }
+      else if (objetivo > lim) { objetivo = lim; trasPista = Math.min(trasPista, 0); var yy = Math.floor(lim * maxP); if (y - yy > 2) window.scrollTo({ top: yy, behavior: 'auto' }); avisarFreno(); }
     }
   }
   window.addEventListener('scroll', leerScroll, { passive: true });
@@ -3450,13 +3480,22 @@ function main() {
   // Con la voz encendida, el scroll no pasa al siguiente diálogo hasta que Papelito termina; sin voz, espera lo que tarda leerlo.
   // Las boletas de razones son freno duro: ni las flechas las saltan, y suenan una por una.
   var VEL_MAX = 0.0085, navLibreHasta = 0, frenoAvisoHasta = 0, frenoEl = document.getElementById('freno');
-  var freno = { rel: null, pts: [], h: -1, desde: 0, oidos: [] };
+  var freno = { rel: null, pts: [], h: -1, desde: 0, oidos: [], oidoT: 0, auto: -1 };
+  // Mientras falte alguna boleta por escuchar, el scroll y las flechas no hacen nada
+  function bloqueoRazones() {
+    var pts = freno.pts; if (!activo || finalAbierto || freno.h < 0 || !pts[freno.h] || !pts[freno.h].duro) return false;
+    for (var i = freno.h; i < pts.length; i++) if (pts[i].duro && !freno.oidos[i]) return true;
+    return false;
+  }
+  function frenarGesto(e) { if (bloqueoRazones()) { if (e.cancelable) e.preventDefault(); avisarFreno(); } }
+  window.addEventListener('wheel', frenarGesto, { passive: false });
+  window.addEventListener('touchmove', frenarGesto, { passive: false });
   function puntosFreno() {
     if (freno.rel === RELATO) return freno.pts;
     var pts = RELATO.map(function (r) { return { p: r[0], t: r[1], duro: faseDe(r[0] + 1e-6)[0] === 'razones' }; });
     [0, 1, 2].forEach(function (j) { pts.push({ p: en('razones', 0.08 + j * 0.26), t: '', duro: true, carta: true }); });
     pts.sort(function (a, b) { return a.p - b.p; });
-    freno.rel = RELATO; freno.pts = pts; freno.h = -1; freno.oidos = pts.map(function () { return false; });
+    freno.rel = RELATO; freno.pts = pts; freno.h = -1; freno.auto = -1; freno.oidos = pts.map(function () { return false; });
     return pts;
   }
   function puntoDe(pts, P) { var h = -1; for (var i = 0; i < pts.length; i++) if (P >= pts[i].p - 0.0005) h = i; return h; }
@@ -3467,8 +3506,15 @@ function main() {
     if (h >= 0 && !freno.oidos[h]) {
       var pt = pts[h], dur = T - freno.desde, voz = window.__vozPapelito, conVoz = !!(voz && voz.activa && voz.activa());
       var lectura = pt.carta ? 4 : Math.min(6, Math.max(2.2, pt.t.replace(/\*/g, '').split(/\s+/).length * 0.26));
-      if (dur > 18 || dur > (conVoz ? 1.2 : lectura) && !vozOcupada()) freno.oidos[h] = true;
+      if (dur > 18 || dur > (conVoz ? 1.2 : lectura) && !vozOcupada()) { freno.oidos[h] = true; freno.oidoT = T; }
     }
+    // En las boletas de razones la historia avanza sola: al terminar cada voz pasa a la siguiente boleta
+    if (h >= 0 && freno.oidos[h] && pts[h].duro && h + 1 < pts.length && pts[h + 1].duro && freno.auto !== h) {
+      freno.auto = h; navLibreHasta = Date.now() + 2500;
+      var mx = pistaEl.offsetHeight - window.innerHeight;
+      window.scrollTo({ top: Math.ceil((pts[h + 1].p + 0.0008) * mx), behavior: reduce ? 'auto' : 'smooth' });
+    }
+    document.body.classList.toggle('en-razones', bloqueoRazones());
     if (frenoEl) frenoEl.classList.toggle('oculto', Date.now() > frenoAvisoHasta);
   }
   // Hasta dónde puede llegar el avance: al primer punto sin escuchar se puede entrar, pero no pasar de él
@@ -3487,6 +3533,7 @@ function main() {
   window.__ecosP = function (v) { if (v != null) { objetivo = progreso = v; } return progreso; };
   function irA(dir) {
     if (!activo || finalAbierto) return;
+    if (bloqueoRazones()) { avisarFreno(); return; }
     var b = beatDe(objetivo), i = b + dir;
     // Si estás antes del reposo del diálogo actual, "siguiente" primero te lleva a ese reposo
     if (dir > 0 && objetivo < anclaDe(b) - 0.002) i = b;
@@ -3506,11 +3553,13 @@ function main() {
   window.addEventListener('scroll', movido, { passive: true });
   window.addEventListener('pointerdown', movido, { passive: true });
   document.addEventListener('keydown', function (e) {
+    if (document.body.classList.contains('con-legal')) return;
     if (document.body.classList.contains('con-texto')) { if (e.key === 'Escape') cerrarTexto(); return; }
     var tag = e.target && e.target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || document.body.classList.contains('con-boleta') || finalAbierto || !activo) return;
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     var enBoton = tag === 'BUTTON' || tag === 'A';
+    if (bloqueoRazones() && /^(ArrowRight|ArrowLeft|ArrowDown|ArrowUp|PageDown|PageUp|Home|End| )$/.test(e.key)) { e.preventDefault(); avisarFreno(); return; }
     // A11Y: teclado completo. Re Pág, Av Pág y Espacio pasan de diálogo; Inicio y Fin van a los extremos
     if (e.key === 'ArrowRight' || e.key === 'PageDown' || (e.key === ' ' && !enBoton && !e.shiftKey)) { e.preventDefault(); irA(1); }
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || (e.key === ' ' && !enBoton && e.shiftKey)) { e.preventDefault(); irA(-1); }
@@ -3523,7 +3572,8 @@ function main() {
   function guiarNavegacion(P, T) {
     if (activo && !guiaVista && !finalAbierto) { guiaVista = 1; guiaEl.classList.remove('oculto'); ultimoMov = T; }
     if (guiaVista === 1 && objetivo > 0.004) cerrarGuia();
-    var quieto = T - ultimoMov, ver = activo && guiaVista === 2 && !finalAbierto && quieto > 14 && P < 0.97 && !document.body.classList.contains('con-texto');
+    var listo = freno.h >= 0 && !!freno.oidos[freno.h] && !bloqueoRazones(), quieto = T - Math.max(ultimoMov, freno.oidoT);
+    var ver = activo && guiaVista === 2 && !finalAbierto && listo && quieto > 5 && P < 0.97 && !document.body.classList.contains('con-texto');
     if (ver === recordarEl.classList.contains('oculto')) recordarEl.classList.toggle('oculto', !ver);
     var b = beatDe(P); if (b !== beatVisto) { beatVisto = b; navCuenta.textContent = (b + 1) + ' / ' + RELATO.length; }
     barraEl.style.width = (P * 100).toFixed(2) + '%';
@@ -3573,6 +3623,14 @@ function main() {
   function abrirTexto() { armarTexto(); focoPrevio = document.activeElement; document.body.classList.add('con-texto'); document.getElementById('texto-alt').scrollTop = 0; document.getElementById('ta-cerrar').focus(); }
   function cerrarTexto() { document.body.classList.remove('con-texto'); if (focoPrevio && focoPrevio.focus) focoPrevio.focus({ preventScroll: true }); }
   document.getElementById('b-texto').addEventListener('click', abrirTexto);
+  // Aviso de privacidad y aviso legal: se abre desde la boleta, el menú, la boleta de 2027 y el cierre
+  var legalPrevio = null;
+  function abrirLegal() { legalPrevio = document.activeElement; document.body.classList.add('con-legal'); document.getElementById('legal').scrollTop = 0; document.getElementById('lg-cerrar').focus(); }
+  function cerrarLegal() { document.body.classList.remove('con-legal'); if (legalPrevio && legalPrevio.focus) legalPrevio.focus({ preventScroll: true }); }
+  document.querySelectorAll('.ver-legal, #b-legal').forEach(function (b) { b.addEventListener('click', abrirLegal); });
+  document.getElementById('lg-cerrar').addEventListener('click', cerrarLegal);
+  document.getElementById('lg-cerrar2').addEventListener('click', cerrarLegal);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('con-legal')) { e.stopPropagation(); cerrarLegal(); } }, true);
   document.getElementById('salto').addEventListener('click', function (e) { e.preventDefault(); abrirTexto(); });
   document.getElementById('ta-cerrar').addEventListener('click', cerrarTexto);
   document.getElementById('ta-cerrar2').addEventListener('click', cerrarTexto);
@@ -3971,7 +4029,7 @@ function main() {
 
     // Luz del salón y reflectores
     luzSala(f === 'historia' || etapa <= 3 ? 1 : etapa === 4 ? 1 - tramo(s, 0.6, 0.64) : 0);
-    lamparas.forEach(function (l) { l.visible = f === 'historia' && s < 0.45 || etapa === 0; }); // en la toma alta del mapa tapaban la gráfica
+    lamparas.forEach(function (l) { l.visible = f === 'historia' && s < 0.45 || etapa === 0; }); pizarron.visible = !(f === 'historia' && s >= 0.45); // el año grande ocupa ese lugar en la toma del mapa // en la toma alta del mapa tapaban la gráfica
     if (f === 'salon' && etapa !== ultimoFoco) { if (ultimoFoco >= 0 && etapa === 2) Sonido.foco(); ultimoFoco = etapa; }
     if (f !== 'salon') ultimoFoco = -1;
     var k = f === 'salon' ? ease(tramo(s, 0.6, 0.7)) : 0, ctr = centrosCirculo(), cambios = 0;
@@ -4296,7 +4354,7 @@ function main() {
     document.body.classList.toggle('cine', activo && gasto && (s >= G_VOTO - 0.01 && s < 0.885 || s >= 1.0) && camera.aspect >= 0.8);
     if (!impacto && !gasto) { etqC.style.opacity = etqD.style.opacity = 0; }
     var fk = activo && impacto ? fichaDe(s) : activo && gasto ? fichaGasto(s) : '';
-    if (fk !== fichaVista) { if (fk) fichaEl.innerHTML = FICHAS[fk]; fichaEl.classList.toggle('oculto', !fk); fichaVista = fk; document.dispatchEvent(new CustomEvent('ecos:ficha', { detail: fk ? fichaEl : null })); }
+    if (fk !== fichaVista) { document.body.classList.toggle('con-ficha', !!fk); if (fk) fichaEl.innerHTML = FICHAS[fk]; fichaEl.classList.toggle('oculto', !fk); fichaVista = fk; document.dispatchEvent(new CustomEvent('ecos:ficha', { detail: fk ? fichaEl : null })); }
     // Al final del recorrido aparece tu boleta de 2027: no se puede seguir sin marcarla
     if (activo && f === 'barrio' && s > 0.72 && !finalAbierto) abrirFinal();
     if (enIntro) animarIntro(intro, T);
